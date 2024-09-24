@@ -1,6 +1,12 @@
 import Cart from "../models/CartModel.js";
 import asyncHandler from "express-async-handler";
 import axios from "axios";
+import dotenv from "dotenv";
+
+////////////////////////////////////////////////////// removeuser cart fuction and add 6-122 lines modify .env
+
+// Load the max cart product from environment variables
+const MAX_CART = process.env.MAX_CART || 100;
 
 const userCart = asyncHandler(async (req, res) => {
   const { cart } = req.body;
@@ -15,7 +21,7 @@ const userCart = asyncHandler(async (req, res) => {
     const alreadyExistCart = await Cart.findOne({ orderby: _id });
 
     // Validate the cart data before processing
-    if (Array.isArray(cart) && cart.length > 0 && cart.length <= 100) {
+    if (Array.isArray(cart) && cart.length > 0 && cart.length <= MAX_CART) {
       // Limit max cart length to 100
       if (alreadyExistCart) {
         products = alreadyExistCart.products;
@@ -113,6 +119,7 @@ const userCart = asyncHandler(async (req, res) => {
     throw new Error(error);
   }
 });
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //empty cart
 const emptyCart = asyncHandler(async (req, res) => {
